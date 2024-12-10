@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/detail.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/boardsidebar.css}">
+  <title>게시글 상세</title>
+</head>
+<body>
+<div class="board-detail-container">
+  <!-- 사이드바 -->
+  <div class="menu_sidebar" th:insert="~{board/boardsidebar :: boardsidebar}"></div>
+
+  <!-- 게시글 상세 -->
+  <div class="box">
+    <!-- 제목과 메타정보 -->
+    <div class="header">
+      <h2 th:text="${board.title}">게시글 제목</h2>
+      <div class="meta">
+        <span>
+          <span th:if="${board.user != null}" th:text="${board.user.userId}">작성자</span>
+          <span th:if="${board.user == null}">Unknown</span>
+        </span>
+        <span class="date-views">
+          <span th:text="${#dates.format(board.regdate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        </span>
+      </div>
+    </div>
+    <hr>
+
+    <!-- 본문 -->
+    <div class="board-content">
+      <p th:utext="${board.content}">게시글 내용</p>
+    </div>
+
+    <!-- 첨부파일 -->
+    <div class="board-files" th:if="${files != null and !files.isEmpty()}">
+      <h3>첨부파일</h3>
+      <ul>
+        <li th:each="file : ${files}">
+          <a th:href="${file.url}" th:text="${file.name}" target="_blank">첨부파일 이름</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 성공 또는 오류 메시지 -->
+    <div th:if="${success}" class="alert alert-success">
+      <p th:text="${success}"></p>
+    </div>
+    <div th:if="${error}" class="alert alert-danger">
+      <p th:text="${error}"></p>
+    </div>
+
+    <!-- 댓글 섹션 -->
+    <div class="comments-section">
+      <h3>댓글</h3>
+      <ul class="comments-list" th:if="${comments != null and !comments.isEmpty()}">
+        <li th:each="comment : ${comments}">
+          <div class="comment">
+            <p>
+              <strong th:text="${comment.user.userId}">작성자</strong>:
+              <span th:text="${comment.content}">댓글 내용</span>
+            </p>
+            <span th:text="${#dates.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+            <form th:action="@{/board/delete/{id}(id=${comment.id})}" method="post">
+              <button type="submit" class="btn delete-btn">삭제</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+      <p th:if="${comments == null or comments.isEmpty()}">댓글이 없습니다.</p>
+
+      <!-- 댓글 작성 폼 -->
+      <div th:if="${currentUser != null}">
+        <form th:action="@{/board/comments/add}" method="post" class="comment-form">
+          <input type="hidden" name="boardId" th:value="${board.id}">
+          <input type="hidden" name="userId" th:value="${currentUser.userId}">
+          <div class="comment-input-wrapper">
+            <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
+            <button type="submit" class="btn submit-btn">댓글 등록</button>
+          </div>
+        </form>
+      </div>
+      <div th:unless="${currentUser != null}">
+        <p>댓글을 작성하려면 <a th:href="@{/login}">로그인</a>이 필요합니다.</p>
+      </div>
+    </div>
+    <a th:href="@{/board}" class="btn back-btn">목록으로</a>
+    <form th:action="@{/board/del/{id}(id=${board.id})}" method="post">
+      <button type="submit">삭제</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

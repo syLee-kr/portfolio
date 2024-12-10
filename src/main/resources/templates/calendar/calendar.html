@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Calendar</title>
+  <!-- FullCalendar CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/calendar.css}">
+  <!-- FullCalendar JS -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <!-- Axios (API 호출용) -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<!-- 사이드바 -->
+<div class="sidebar">
+  <h1><a th:href="@{/login}">Edge<br>Work</a></h1>
+  <ul class="menu">
+    <li><a id="home-button" th:href="@{/main}"><span class="icon"><img th:src="@{/images/home.png}" alt="홈 아이콘"></span> 홈</a></li>
+    <li><a th:href="@{/main}"><span class="icon"><img th:src="@{/images/message.png}" alt="메세지 아이콘"></span> 공지</a></li>
+    <li><a th:href="@{/board}"><span class="icon"><img th:src="@{/images/board.png}" alt="알림 아이콘"></span> 게시판</a></li>
+    <li><a th:href="@{/calendar}"><span class="icon"><img th:src="@{/images/calendar.png}" alt="캘린더 아이콘"></span> 캘린더</a></li>
+    <!--            <li><a th:href="@{/profile}"><span class="icon"><img th:src="@{/images/기안.png}" alt="프로필 아이콘"></span> 기안</a></li>-->
+  </ul>
+</div>
+<!-- 캘린더 영역 -->
+<div class="calendar">
+  <div id="calendar-container">
+    <div id="calendar"></div>
+  </div>
+</div>
+
+<!-- 이벤트 유형 선택 모달 -->
+<div id="eventTypeModal" style="display: none; position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+  <h3>캘린더 일정 유형</h3>
+  <button onclick="selectEventType('휴가', '#007bff')">휴가</button>
+  <button onclick="selectEventType('업무', '#ffc107')">업무</button>
+  <button onclick="selectEventType('행사', '#dc3545')">행사</button>
+  <button onclick="closeModal('eventTypeModal')">취소</button>
+</div>
+
+<!-- 이벤트 설명 입력 모달 -->
+<div id="eventDescriptionModal" style="display: none; position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+  <h3>세부 입력</h3>
+  <textarea id="eventDescription" placeholder="세부 내용을 입력하세요"></textarea>
+  <button onclick="saveEvent()">저장</button>
+  <button onclick="closeModal('eventDescriptionModal')">취소</button>
+</div>
+
+<script>
+  let calendar;
+  let selectedDate; // 클릭한 날짜
+  let selectedType; // 선택된 이벤트 유형
+  let selectedColor; // 선택된 색상
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    // FullCalendar 초기화
+    calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'ko',
+      events: function (fetchInfo, successCallback, failureCallback) {
+        axios.get('/api/events')
+                .then(response => {
+                  const events = response.data.map(event => ({
+                    id: event.id,
+                    title: event.title,
+                    start: event.startDate,
+                    end: event.endDate,
+                    color: event.color, // 색상 추가
+                  }));
+                  successCallback(events);
+                })
+                .catch(error => {
+                  console.error('이벤트 로드 실패:', error);
+                  failureCallback(error);
+                });
+      },
+      eventDisplay: 'block',
+      dayMaxEvents: true,
+      dateClick: function (info) {
+        selectedDate = info.dateStr; // 날짜 저장
+        showModal('eventTypeModal'); // 이벤트 유형 선택 모달 열기
+      },
+      eventClick: function (info) {
+        if (confirm(`"${info.event.title}" 이벤트를 삭제하시겠습니까?`)) {
+          deleteEvent(info.event.id);
+        }
+      },
+    });
+
+    calendar.render(); // 캘린더 렌더링
+  });
+
+  // 이벤트 유형 선택 함수
+  function selectEventType(type, color) {
+    selectedType = type;
+    selectedColor = color;
+    closeModal('eventTypeModal'); // 이벤트 유형 선택 모달 닫기
+    showModal('eventDescriptionModal'); // 이벤트 설명 입력 모달 열기
+  }
+
+  // 이벤트 저장 함수
+  function saveEvent() {
+    const title = document.getElementById('eventDescription').value;
+    if (!title) {
+      alert('이벤트 내용을 입력하세요.');
+      return;
+    }
+
+    axios.post('/api/events', {
+      title: title,
+      startDate: selectedDate,
+      endDate: selectedDate,
+      type: selectedType,
+      color: selectedColor,
+    })
+            .then(response => {
+              alert('이벤트가 생성되었습니다.');
+              calendar.addEvent({
+                id: response.data.id,
+                title: response.data.title,
+                start: response.data.startDate,
+                end: response.data.endDate,
+                color: response.data.color,
+              });
+              closeModal('eventDescriptionModal'); // 이벤트 설명 입력 모달 닫기
+            })
+            .catch(error => {
+              console.error('이벤트 생성 실패:', error);
+              alert('이벤트 생성에 실패했습니다.');
+            });
+  }
+
+  // 모달 열기
+  function showModal(modalId) {
+    document.getElementById(modalId).style.display = 'block';
+  }
+
+  // 모달 닫기
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+
+  // 이벤트 삭제 함수
+  function deleteEvent(eventId) {
+    axios.delete(`/api/events/${eventId}`)
+            .then(() => {
+              alert('이벤트가 삭제되었습니다.');
+              const event = calendar.getEventById(eventId);
+              if (event) {
+                event.remove();
+              }
+            })
+            .catch(error => {
+              console.error('이벤트 삭제 실패:', error);
+              alert('이벤트 삭제에 실패했습니다.');
+            });
+  }
+</script>
+
+</body>
+</html>

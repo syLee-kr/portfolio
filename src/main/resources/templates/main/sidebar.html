@@ -1,0 +1,18 @@
+<div th:fragment="sidebar">
+    <div class="sidebar">
+        <ul class="menu">
+            <li><a id="home-button" th:href="@{/main}">
+                <span class="icon"><img th:src="@{/images/home.png}" alt="홈 아이콘"></span> 홈
+            </a></li>
+            <li><a th:href="@{/chat}"><span class="icon"><img th:src="@{/images/message.png}" alt="메세지 아이콘"></span> 메시지</a></li>
+            <li><a th:href="@{/main}"><span class="icon"><img th:src="@{/images/alarm.png}" alt="알림 아이콘"></span> 알림</a></li>
+            <li><a th:href="@{/board}"><span class="icon"><img th:src="@{/images/board.png}" alt="프로필 아이콘"></span> 게시판</a></li>
+            <li><a th:href="@{/profile}"><span class="icon"><img th:src="@{/images/profile.png}" alt="프로필 아이콘"></span> 프로필</a></li>
+            <li><a th:href="@{/logout}"><span class="icon"><img th:src="@{/images/logout.png}" alt="캘린더 아이콘"></span> 로그아웃</a></li>
+<!--            <li><a th:href="@{/more}"><span class="icon"><img th:src="@{/images/setting.png}" alt="설정 아이콘"></span> 설정</a></li>-->
+        </ul>
+        <div class="logo">
+            <h1><a th:href="@{/login}">Edge<br>Work</a></h1>
+        </div>
+    </div>
+</div>

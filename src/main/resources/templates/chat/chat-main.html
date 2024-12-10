@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chat Example</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chat.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}"/>
+</head>
+<body>
+<div class="layout-container">
+    <div class="menu_sidebar" th:insert="~{main/sidebar :: sidebar}"></div>
+    <div class="main-container">
+        <div class="chat-area">
+            <div id="chat-container"></div>
+            <div class="input-area">
+                <input type="text" id="message-input" placeholder="Type your message..."/>
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+        <div class="sidebar">
+            <div class="sidebar-header">User List</div>
+            <ul class="user-list" id="user-list">
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var currentUser = /*[[${user}]]*/ null; // user는 현재 DTO
+    var userList = JSON.parse(/*[[${userListJson}]]*/ []);
+    var currentRoom = /*[[${room}]]*/ null;
+
+
+    function renderUserList() {
+        var userListContainer = document.getElementById('user-list');
+        userListContainer.innerHTML = '';
+
+        userList.forEach(user => {
+            var li = document.createElement('li');
+            li.textContent = user.name;
+            li.dataset.userId = user.id;
+
+            li.addEventListener('click', function () {
+                startChatWithUser(user);
+            });
+
+            userListContainer.appendChild(li);
+            console.log(userList);
+        });
+    }
+
+    /* 유저 선택 후 채팅 시작 */
+    function startChatWithUser(user) {
+        if (currentUser.id === user.id) {
+            alert("You cannot chat with yourself!");
+            return;
+        }
+
+        fetch(`/chat/room/create?userId=${user.id}`, {method: 'POST'})
+            .then(response => response.json())
+            .then(room => {
+                currentRoom = room;
+                connectToWebSocket(room.id, user.name);
+            })
+            .catch(error => {
+                console.error("Failed to create or join chat room:", error);
+            });
+    }
+
+    function connectToWebSocket(roomId, userName) {
+        document.getElementById('chat-title').textContent = `Chat with ${userName}`;
+        var ws = new WebSocket("ws://" + window.location.host + "/chat/" + roomId);
+
+        ws.onmessage = function (event) {
+            var msgData = JSON.parse(event.data);
+            displayMessage(msgData.sender, msgData.content);
+        };
+
+        ws.onopen = function () {
+            console.log(`Connected to WebSocket for room ID: ${roomId}`);
+        };
+
+        ws.onclose = function () {
+            console.log("WebSocket connection closed");
+        };
+
+        var messageInput = document.getElementById('message-input');
+        var sendBtn = document.getElementById('send-btn');
+
+        sendBtn.addEventListener("click", function () {
+            sendMessage(ws);
+        });
+
+        messageInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                sendMessage(ws);
+            }
+        });
+    }
+
+    /* 메시지 전송 */
+    function sendMessage(ws) {
+        var messageInput = document.getElementById('message-input');
+        var msg = messageInput.value.trim();
+        if (msg !== "") {
+            ws.send(JSON.stringify({content: msg, sender: currentUser.name}));
+            displayMessage("Me", msg);
+            messageInput.value = "";
+        }
+    }
+
+    /* 화면에 메시지 출력 */
+    function displayMessage(sender, text) {
+        var chatContainer = document.getElementById('chat-container');
+        var msgDiv = document.createElement('div');
+        msgDiv.className = 'message ' + (sender === 'Me' ? 'me' : 'others');
+
+        var senderSpan = document.createElement('span');
+        senderSpan.className = 'sender';
+        senderSpan.textContent = sender;
+
+        var textSpan = document.createElement('span');
+        textSpan.className = 'text';
+        textSpan.textContent = text;
+
+        msgDiv.appendChild(senderSpan);
+        msgDiv.appendChild(textSpan);
+        chatContainer.appendChild(msgDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    /* 초기화 */
+    renderUserList();
+</script>
+</body>
+</html>

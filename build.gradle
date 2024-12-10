@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral() // Maven Central 추가
+    google()       // Google Maven 저장소 추가
+}
+
+bootJar {
+    archiveFileName = 'portfolio-0.0.1-SNAPSHOT.jar' // 원하는 파일명 설정 (옵션)
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.0"  // Spring Cloud 버전 맞추기
+    }
+}
+
+tasks.named('bootJar') {
+    enabled = true
+}
+
+dependencies {
+    // Spring Boot 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.security:spring-security-crypto'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+
+    // MySQL JDBC (중복 제거)
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+
+
+    // Spring Cloud GCP
+    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage:1.2.8.RELEASE'
+
+    // Lombok
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // 개발 도구
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Google Cloud Storage
+    implementation 'com.google.cloud:google-cloud-storage:2.27.0'
+
+    // Logstash Logback Encoder (JSON 로그를 원할 경우)
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
+    // Optional: 특정 Logback 버전을 사용해야 할 경우 주석 해제
+    // implementation 'ch.qos.logback:logback-classic:1.4.11'
+    // implementation 'ch.qos.logback:logback-core:1.4.11'
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+}
+

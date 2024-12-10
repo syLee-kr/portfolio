@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 작성</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/new.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/boardsidebar.css}">
+</head>
+<body>
+<div class="board-container">
+  <!-- 사이드바 -->
+  <div class="menu_sidebar" th:insert="~{board/boardsidebar :: boardsidebar}"></div>
+
+  <!-- 게시글 작성 폼 -->
+  <div class="board-content">
+    <div class="box">
+      <div class="box2">
+        <h2>게시글 작성</h2>
+        <form th:action="@{/board/create}" th:object="${board}" method="post" enctype="multipart/form-data">
+          <!-- 제목 -->
+          <div class="form-row">
+            <div class="form-group1">
+              <label for="title">제목</label>
+              <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required>
+            </div>
+            <div class="form-group2">
+              <label for="priority">게시글 선택</label>
+              <select id="priority" th:field="*{priority}">
+                <option value="0">일반</option>
+                <option value="1">공지</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 내용 -->
+          <div class="form-group">
+            <label for="content">내용</label>
+            <textarea id="content" th:field="*{content}" placeholder="내용을 입력하세요" rows="10" style="font-family: Pretendard-Regular, sans-serif !important;" required></textarea>
+          </div>
+
+          <!-- 첨부파일 -->
+          <div class="form-row2">
+            <div class="form-group3">
+              <label for="files">첨부파일</label>
+              <input type="file" id="files" name="files" multiple>
+            </div>
+
+            <!-- 작성자 (숨겨진 필드) -->
+            <input type="hidden" name="userId" th:value="${currentUser.userId}">
+
+            <!-- 작성 버튼 -->
+            <div class="form-actions">
+              <button type="submit" class="submit-btn">작성</button>
+              <a th:href="@{/board}" class="cancel-btn">취소</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

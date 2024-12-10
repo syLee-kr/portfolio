@@ -1,0 +1,139 @@
+/* 프로필 페이지 스타일 */
+.layout-container {
+    display: flex;
+    min-height: 100vh; /* 화면 높이를 꽉 채우도록 설정 */
+}
+
+.menu_sidebar {
+    flex: 0 0 250px; /* 고정된 너비 */
+}
+
+.main-container {
+    flex: 1; /* 나머지 공간 차지 */
+    padding: 20px;
+    overflow: hidden; /* 스크롤바 필요 시 추가 */
+}
+
+.profile-container {
+    background-color: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #fff;
+    width: 500px;
+    height: 700px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.profile-image {
+    margin-bottom: 20px;
+}
+
+.profile-image .profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+    background-color: white;
+}
+
+.profile-details {
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.profile-details p {
+    margin: 10px 0;
+}
+
+.profile-details strong {
+    color: #ddd;
+}
+
+.edit-profile-button {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.edit-profile-button:hover {
+    background-color: #ffffff;
+}
+
+/* 레이아웃 조정 (반응형 디자인) */
+@media screen and (max-width: 768px) {
+    .profile-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .profile-image .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .edit-profile-button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+.profile-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    color: #fff;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.profile-edit-form label {
+    font-weight: bold;
+}
+
+.profile-edit-form input {
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.save-profile-button, .cancel-profile-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+    cursor: pointer;
+}
+
+.save-profile-button:hover {
+    background-color: #28a745;
+}
+
+.cancel-profile-button:hover {
+    background-color: #dc3545;
+}

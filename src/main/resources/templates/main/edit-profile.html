@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 수정</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/edit-profile.css}">
+</head>
+<body>
+<div class="layout-container">
+    <div class="menu_sidebar" th:insert="~{main/sidebar :: sidebar}"></div>
+    <div id="main-container" class="main-container">
+        <form th:action="@{/edit-profile}" method="post" enctype="multipart/form-data" class="profile-edit-form">
+            <div>
+                <label for="name">이름:</label>
+                <input type="text" id="name" name="name" th:value="${user.name}">
+            </div>
+            <div>
+                <label for="password">비밀번호 (변경 시만 입력):</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <div>
+                <label for="birthday">생년월일:</label>
+                <input type="date" id="birthday" name="birthday" th:value="${user.birthday}">
+            </div>
+            <div>
+                <label for="phone">전화번호:</label>
+                <input type="text" id="phone" name="phone" th:value="${user.phone}">
+            </div>
+            <div>
+                <label for="address">주소:</label>
+                <input type="text" id="address" name="address" th:value="${user.address}">
+            </div>
+            <div class="profile-actions">
+                <button type="submit" class="save-profile-button">저장</button>
+                <button type="button" class="cancel-profile-button" onclick="location.href='/profile'">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

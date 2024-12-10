@@ -1,0 +1,167 @@
+/* 공통 스타일 */
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    background: #f5f5f5; /* 연한 회색 배경 */
+    color: #333; /* 기본 글자 색상 */
+    margin: 0;
+    font-family: Pretendard-Regular, sans-serif !important;
+}
+
+/* 사이드바 */
+.menu_sidebar {
+    width: 250px; /* 사이드바 너비 */
+    background-color: #000; /* 사이드바 배경색 */
+    color: #fff; /* 사이드바 글자색 */
+    min-height: 100vh; /* 화면 전체 높이 */
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-right: 2px solid #fff; /* 사이드바 오른쪽 경계 */
+}
+
+/* 전체 컨테이너 */
+.board-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* 스크롤 방지 */
+}
+
+.box {
+    margin: 50px;
+    border-radius: 20px;
+}
+
+.box2 {
+    margin: 50px;
+}
+
+.form-row {
+    display: flex; /* 가로 정렬 */
+    align-items: flex-end; /* 아래쪽 정렬 (label 높이가 다를 경우) */
+}
+
+/* 게시글 작성 폼 컨텐츠 */
+.board-content {
+    flex: 1; /* 사이드바를 제외한 나머지 공간 차지 */
+    margin-left: 250px; /* 사이드바 너비만큼 간격 */
+    padding: 30px;
+    background-color: #fff; /* 흰색 배경 */
+    overflow-y: auto; /* 폼 내용 스크롤 가능 */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* 좌측 경계선 그림자 */
+}
+
+/* 제목 스타일 */
+.board-content h2 {
+    color: #007bff; /* 헤더 색상 */
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #007bff; /* 헤더 아래선 */
+    padding-bottom: 10px;
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group1    {
+    margin-bottom: 20px;
+    width: 85%;
+    padding-right: 5%;
+}
+.form-group2    {
+    margin-bottom: 20px;
+    width: 15%;
+}
+.form-row2 {
+    display: flex;
+    justify-content: space-between; /* 좌우로 요소를 분리 */
+    align-items: center; /* 모든 요소를 수평선 상에서 중앙 정렬 */
+    margin-top: 20px;
+}
+
+/* 첨부파일 필드 */
+.form-group3 {
+    display: flex;
+    flex-direction: column; /* 라벨과 필드를 세로 정렬 */
+    flex: 1; /* 버튼 영역과 균형 조정 */
+    margin-right: 20px; /* 버튼과 간격 설정 */
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+input[type="text"], textarea, select, input[type="file"] {
+    width: 98%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 입력 필드 안쪽 그림자 */
+    background-color: #f9f9f9; /* 입력 필드 배경색 */
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: #007bff;
+}
+
+textarea {
+    resize: none; /* 크기 조정 비활성화 */
+}
+
+/* 파일 업로드 */
+input[type="file"] {
+    padding: 5px;
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex; /* 버튼을 가로 정렬 */
+    gap: 10px; /* 버튼 간 간격 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    padding-top: 20px;
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+button.submit-btn, a.cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+button.submit-btn {
+    background-color: #28a745;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button.submit-btn:hover {
+    background-color: #218838;
+}
+
+a.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+a.cancel-btn:hover {
+    background-color: #c82333;
+}

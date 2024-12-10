@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/sidebar.css}">
+</head>
+<body>
+<div class="layout-container">
+    <div class="menu_sidebar" th:insert="~{main/sidebar :: sidebar}"></div>
+    <div id="main-container" class="main-container">
+        <div id="post-container" class="post-container">
+            <!-- 첫 번째 Post -->
+            <div class="post-item">
+                <h3>최신 업로드 영상 추이</h3>
+                <div class="post-video">
+                    <iframe
+                            th:src="${post.URLLink}"
+                            width="576"
+                            height="326"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+                <p th:text="|현재 조회수: ${post.views != null ? post.views : '조회수 정보가 없습니다.'} / 업로드 일자: ${post.uploadDay != null ? post.uploadDay : '업로드 날짜 정보가 없습니다.'}|"></p>
+                <p th:text="|전체 평균 일일 조회수: ${post.allanv != null ? post.allanv : '전체 평균 조회수 정보가 없습니다.'} / 영상 평균 일일 조회수: ${post.anviews != null ? post.anviews : '평균 조회수 정보가 없습니다.'}|"></p>
+            </div>
+
+            <!-- Post2 데이터 표 -->
+            <div class="post-item">
+                <h3>실시간 연합 뉴스 트렌드</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>인기 단어</th>
+                        <th>횟수</th>
+                        <th>링크 1</th>
+                        <th>링크 2</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="post2 : ${post2List}">
+                        <td th:text="${post2.popularWord}"></td>
+                        <td th:text="${post2.count}"></td>
+                        <td>
+                            <a th:href="${post2.link1}" target="_blank" th:text="${post2.link1 != null ? '기사 링크 1' : '없음'}"></a>
+                        </td>
+                        <td>
+                            <a th:href="${post2.link2}" target="_blank" th:text="${post2.link2 != null ? '기사 링크 2' : '없음'}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="loading" style="display: none; text-align: center; padding: 20px;">
+            <p>Loading more posts...</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

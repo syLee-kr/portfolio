@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/boardsidebar.css}">
+</head>
+<body>
+<div class="board-container">
+  <div class="menu_sidebar" th:insert="~{board/boardsidebar :: boardsidebar}"></div>
+
+  <div class="board-content">
+    <!-- 검색 및 페이지 이동 -->
+    <div class="control-panel">
+      <div class="search-container">
+        <form th:action="@{/board/search}" method="get">
+          <input type="text" name="query" placeholder="검색어를 입력하세요" class="search-input" required>
+          <button type="submit" class="search-btn">검색</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 게시글 테이블 -->
+    <table class="board-table">
+      <thead>
+      <tr>
+        <th style="width: 10%">No</th>
+        <th style="width: 70%">제목</th>
+        <th style="width: 10%">작성자</th>
+        <th style="width: 10%">작성일</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- 게시글 데이터 출력 -->
+      <tr th:each="board : ${boards.content}"
+          th:classappend="${board.priority > 0} ? 'notice-row' : ''">
+        <td th:text="${board.id}">1</td>
+        <td class="title">
+          <a th:href="@{/board/{id}(id=${board.id})}" th:text="${board.title}">게시글 제목</a>
+        </td>
+        <td th:text="${board.user != null ? board.user.userId : 'Unknown'}">작성자</td>
+        <td th:text="${#dates.format(board.regdate, 'yyyy-MM-dd')}">작성일</td>
+      </tr>
+
+      <!-- 빈 줄 출력 -->
+      <tr th:if="${boards.content.size() < 10}" th:each="i : ${#numbers.sequence(boards.content.size() + 1, 10)}">
+        <td colspan="4" class="empty-row">게시글 없음</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <a th:href="@{/board(page=0)}"
+         th:classappend="${boards.totalPages <= 1 || boards.number == 0} ? 'disabled' : ''">
+        처음
+      </a>
+      <a th:href="@{/board(page=${startPage - 2})}"
+         th:classappend="${boards.totalPages <= 1 || startPage == 1} ? 'disabled' : ''">
+        이전
+      </a>
+      <span class="page-numbers"
+            th:if="${boards.totalPages > 1}">
+        <a th:each="i : ${#numbers.sequence(startPage, endPage)}"
+           th:href="@{/board(page=${i - 1})}"
+           th:classappend="${boards.number + 1 == i} ? 'active' : ''"
+           th:text="${i}"></a>
+    </span>
+      <a th:href="@{/board(page=${endPage})}"
+         th:classappend="${boards.totalPages <= 1 || endPage == totalPages} ? 'disabled' : ''">
+        다음
+      </a>
+      <a th:href="@{/board(page=${totalPages - 1})}"
+         th:classappend="${boards.totalPages <= 1 || boards.number + 1 == totalPages} ? 'disabled' : ''">
+        마지막
+      </a>
+    </div>
+
+
+    <div class="write-btn">
+      <a th:href="@{/board/new}">게시글 작성</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

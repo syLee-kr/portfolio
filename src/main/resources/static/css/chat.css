@@ -1,0 +1,129 @@
+/* 레이아웃 컨테이너가 화면 전체를 차지하며,
+   메뉴 사이드바 영역과 메인 컨테이너 영역을 가로로 배치합니다. */
+.layout-container {
+    display: flex;
+    height: 100vh; /* 화면 전체 높이 */
+    box-sizing: border-box;
+}
+
+/* 메뉴 사이드바(.menu_sidebar) 부분은 이미 CSS로 구현되었으므로 수정하지 않습니다. */
+
+/* 메인 컨테이너: 메뉴 사이드바를 제외한 남은 영역에
+   채팅 영역과 사용자 리스트 사이드바를 배치합니다. */
+.main-container {
+    flex: 1;
+    display: flex;       /* 채팅영역과 오른쪽 사이드바(사용자 리스트)를 가로로 배치 */
+    flex-direction: row;
+    position: relative;
+    overflow: hidden;    /* 필요하다면 오버플로우 처리 */
+}
+
+/* 채팅 영역 */
+.chat-area {
+    flex: 1;               /* 남은 공간을 최대한 활용 */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 실제 채팅 메시지들이 표시될 영역 */
+#chat-container {
+    flex: 1;
+    overflow-y: auto;        /* 내용이 많아질 경우 스크롤 */
+    padding-right: 10px;     /* 오른쪽 패딩으로 스크롤바 공간 확보 */
+    margin-bottom: 60px;     /* 아래쪽 입력창 공간 확보 */
+}
+
+/* 메시지 입력 영역 */
+.input-area {
+    position: absolute;
+    bottom: 20px;  /* 하단에 고정 */
+    left: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.input-area input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* 메시지 스타일 */
+.message {
+    margin-bottom: 10px;
+}
+
+.message.me {
+    text-align: right;
+}
+
+.message.others {
+    text-align: left;
+}
+
+.message .sender {
+    display: block;
+    font-size: 12px;
+    color: #999;
+}
+
+.message .text {
+    display: inline-block;
+    background: #eee;
+    color: #333;
+    border-radius: 4px;
+    padding: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+    margin-top: 2px;
+}
+
+/* 오른쪽 사용자 리스트 사이드바 */
+.sidebar {
+    width: 240px;           /* 해당 너비를 유지 */
+    background-color: #000;
+    color: #fff;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* 이미 적용된 스타일 유지 */
+}
+
+.sidebar-header {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.user-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+}
+
+.user-list li:hover {
+    background-color: #111;
+}
